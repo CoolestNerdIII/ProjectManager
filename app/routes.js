@@ -3,7 +3,8 @@ var Todo = require('./models/todo');
 var Category = require('./models/category');
 var Item = require('./models/item');
 var Sprint = require('./models/sprint');
-
+var categoryViewModel = require('./viewModels/category');
+var sprintViewModel = require('./viewModels/sprint');
 
 module.exports = function (app, passport) {
     "use strict";
@@ -141,7 +142,18 @@ module.exports = function (app, passport) {
                 if (err) {
                     res.send(err);
                 }
-                res.json(category);
+
+                if (!category) {
+                    res.send({error: 'Unable to find category'});
+                }
+
+                category.getItems(function(err, items) {
+                    if (err) {
+                        res.send(err);
+                    }
+
+                    res.json(categoryViewModel(category, items));
+                })
             });
         })
 
@@ -220,7 +232,17 @@ module.exports = function (app, passport) {
                 if (err) {
                     res.send(err);
                 }
-                res.json(sprint);
+
+                if (!sprint) {
+                    res.send({ error: 'Unable to find sprint' });
+                }
+
+                sprint.getItems(function(err, items) {
+                    if (err) {
+                        res.send(err);
+                    }
+                    res.json(sprintViewModel(sprint, items));
+                });
             });
         })
 

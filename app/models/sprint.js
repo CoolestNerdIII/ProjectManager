@@ -12,9 +12,9 @@ var sprintSchema = mongoose.Schema({
 
 // methods
 // Returns all of the items in the sprint
-sprintSchema.methods.getItems = function() {
+sprintSchema.methods.getItems = function(cb) {
     "use strict";
-    return Items.find({ sprint: this._id });
+    return Items.find({ sprint: this._id }, cb);
 };
 
 // create the model and expose it to the app

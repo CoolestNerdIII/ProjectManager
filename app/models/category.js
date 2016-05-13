@@ -11,9 +11,9 @@ var categorySchema = mongoose.Schema({
 
 // methods
 // Returns all of the items in the category
-categorySchema.methods.getItems = function() {
+categorySchema.methods.getItems = function (cb) {
     "use strict";
-    return Items.find({ category: this._id });
+    return Items.find({ category: this._id}, cb);
 };
 
 // create the model and expose it to the app
