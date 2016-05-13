@@ -1,0 +1,24 @@
+{
+  "name": "todo-aholic",
+  "description": "",
+  "main": "server.js",
+  "authors": [
+    "Paul Wilson <paul.l.wilson3@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.5",
+    "angular-resource": "^1.5.5",
+    "angular-material": "^1.0.8",
+    "jquery": "^2.2.3"
+  }
+}

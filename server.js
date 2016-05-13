@@ -16,7 +16,7 @@ require('./config/passport')(passport); // pass passport for configuration
 
 mongoose.connect(configDB.url);
 
-// app.use(express.static(__dirname + '/public'));  // set static file location
+app.use(express.static(__dirname + '/public'));  // set static file location
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser.urlencoded({'extended':'true'}));

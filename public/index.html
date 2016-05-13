@@ -27,9 +27,9 @@
     </style>
 
     <!-- SPELLS -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.js"></script><!-- load angular 1.2.4 -->
-
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/angular/angular.min.js"></script>
+    <script src="lib/angular-resource/angular-resource.min.js"></script>
     <script src="js/controllers/main.js"></script>
     <script src="js/services/todos.js"></script>
     <script src="js/core.js"></script>
@@ -52,7 +52,8 @@
             <!-- LOOP OVER THE TODOS IN $scope.todos -->
             <div class="checkbox" ng-repeat="todo in todos">
                 <label>
-                    <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}
+                    <input type="checkbox" ng-click="markComplete(todo)" ng-checked="todo.done"> {{ todo.text }}
+                    <!--<input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}-->
                 </label>
             </div>
 

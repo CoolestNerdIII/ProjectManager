@@ -1,3 +1,3 @@
 // js/core.js
 
-angular.module('todo-aholic', ['todoController', 'todoService']);
+angular.module('todo-aholic', ['todoController', 'ngResource', 'todoService']);

@@ -1,25 +1,12 @@
-
 # Ignore bower component
 bower_components
 
 # Node modules
 node_modules
+lib
 
-# Python compiled code
-*.pyc
-
-# SQLite3 Database
-*.sqlite3
 .idea
-dash_env
-
-static-files
-
-# Celery Files
-celerybeat-schedule
-dump.rdb
-celerybeat.pid
 
 # Ignore log files
-*.log
-debug.*
+#*.log
+#debug.*
