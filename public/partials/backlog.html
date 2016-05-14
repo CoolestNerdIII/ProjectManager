@@ -1,11 +1,46 @@
 <md-content class="md-padding" layout="column">
     <md-card ng-repeat="category in categories">
         <md-toolbar>
-            <div class="md-toolbar-tools"> {{ category.name }} </div>
+            <div class="md-toolbar-tools">
+                <h2>{{ category.name }}</h2>
+                <span flex=""></span>
+                <div ng-if="categoryDisplay[$index]">
+                    <md-button class="md-icon-button" aria-label="toggle" ng-click="toggleCategory($index)">
+                        <ng-md-icon icon="arrow_drop_up"></ng-md-icon>
+                        <md-tooltip>Hide Category</md-tooltip>
+                    </md-button>
+                </div>
+
+                <div ng-if="!categoryDisplay[$index]">
+                    <md-button class="md-icon-button" aria-label="toggle" ng-click="toggleCategory($index)">
+                        <ng-md-icon icon="arrow_drop_down"></ng-md-icon>
+                        <md-tooltip>Show Category</md-tooltip>
+                    </md-button>
+                </div>
+
+                <md-button class="md-icon-button" aria-label="delete" ng-click="deleteCategory($event, category._id)">
+                    <ng-md-icon icon="delete"></ng-md-icon>
+                    <md-tooltip>Delete Category</md-tooltip>
+                </md-button>
+            </div>
 
         </md-toolbar>
+        <div ng-if="categoryDisplay[$index]">
         <md-content>
             <md-list ng-cloak="">
+
+                <form id="newItem" autocomplete="off" ng-submit="newItem(category._id)">
+                <md-list-item>
+                    <!-- Input Text-->
+
+                    <md-input-container class="md-block" flex="">
+                        <label for="inputText">Enter New Todo Item</label>
+                        <input id="inputText" name="newItem" ng-model="itemText" required>
+                    </md-input-container>
+
+                </md-list-item>
+                </form>
+
                 <md-list-item ng-repeat="item in category.items" class="md-2-line">
                     <!-- Checkbox -->
                     <md-checkbox ng-checked="item.status == 'COMPLETE' " ng-click="toggle(item)"></md-checkbox>
@@ -17,18 +52,13 @@
                     </div>
 
                     <!-- Edit Button-->
-                    <md-button class="md-secondary" ng-click="editItemDialog($even, item)">Edit</md-button>
+                    <md-button class="md-secondary" ng-click="editItemDialog($event, item, $parent.$index)">Edit</md-button>
                 </md-list-item>
 
-                <md-list-item>
-                    <!-- Input Text-->
-                    <md-input-container class="md-block" flex="">
-                        <label for="inputText">Enter New Todo Item</label>
-                        <input>
-                    </md-input-container>
-                </md-list-item>
+
             </md-list>
         </md-content>
+        </div>
     </md-card>
 
 </md-content>

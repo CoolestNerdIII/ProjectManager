@@ -56,6 +56,8 @@ controllers.controller('mainController', function($scope, $http, Todos) {
 controllers.controller('backlogController', function($scope, $mdDialog, $mdMedia, Category, Item) {
     "use strict";
     $scope.categories = [];
+    $scope.categoryDisplay = [];
+    $scope.itemText = '';
 
     /**
      * Function to update the categories returned
@@ -63,6 +65,11 @@ controllers.controller('backlogController', function($scope, $mdDialog, $mdMedia
     $scope.updateCategories = function() {
         Category.query(function(data) {
             $scope.categories = data;
+
+            for (var i = 0; i < $scope.categories.length; i++) {
+                $scope.categoryDisplay[i] = true;
+            }
+
         })
     };
 
@@ -81,11 +88,77 @@ controllers.controller('backlogController', function($scope, $mdDialog, $mdMedia
     };
 
     /**
+     * Function to create a new item
+     * @param category_id
+     */
+    $scope.newItem = function(category_id) {
+
+        var item = new Item({category: category_id});
+        item.title = this.itemText;
+        item.$save();
+
+        for(var i = 0; i < $scope.categories.length; i++) {
+            var cat = $scope.categories[i];
+            if (cat._id.toString() == category_id.toString()) {
+                $scope.categories[i].items.push(item);
+                break;
+            }
+        }
+
+        this.itemText = '';
+
+        $scope.newItemText = '';
+    };
+
+    /**
+     * Function to delete a category and all associated items
+     * @param event
+     * @param category_id
+     */
+    $scope.deleteCategory = function(event, category_id) {
+        var confirm = $mdDialog.confirm()
+            .title('Are you sure you want to delete this category?')
+            .textContent('This will also delete all associated items.')
+            .ariaLabel('Category Deletion')
+            .targetEvent(event)
+            .ok('Yes')
+            .cancel('Cancel');
+        
+        $mdDialog.show(confirm).then(function() {
+
+            var idx = -1;
+            for (var i = 0; i < $scope.categories.length; i++) {
+                var cat = $scope.categories[i];
+                if (cat._id.toString() == category_id.toString()) {
+                    idx = i;
+                    break;
+                }
+            }
+
+            Category.delete({id: category_id}, function() {
+                if (idx > -1) {
+                    $scope.categories.splice(idx, 1);
+                    $scope.categoryDisplay.splice(idx, 1);
+                }
+            });
+        })
+    };
+
+    /**
+     * Toggles the ability to show/hide the category
+     * @param index
+     */
+    $scope.toggleCategory = function(index) {
+        $scope.categoryDisplay[index] = !$scope.categoryDisplay[index];
+    };
+
+    /**
      * Function to show dialog for editing an item
      * @param event: Button pressed
      * @param item: Item to be edited
+     * @param categoryIndex: Index of the category selected
      */
-    $scope.editItemDialog = function(event, item) {
+    $scope.editItemDialog = function(event, item, categoryIndex) {
         var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
 
         $mdDialog.show({
@@ -96,7 +169,9 @@ controllers.controller('backlogController', function($scope, $mdDialog, $mdMedia
                 clickOutsideToClose:true,
                 fullscreen: useFullScreen,
                 locals: {
-                    item: item
+                    item: item,
+                    categories: $scope.categories,
+                    categoryIndex: categoryIndex
                 }
             })
             .then(function(item) {
@@ -116,9 +191,11 @@ controllers.controller('backlogController', function($scope, $mdDialog, $mdMedia
      * @param $scope
      * @param $mdDialog
      * @param item
+     * @param categories
+     * @param categoryIndex
      * @constructor
      */
-    function DialogController($scope, $mdDialog, item) {
+    function DialogController($scope, $mdDialog, item, categories, categoryIndex) {
 
         // Convert to a date if object is a string
         if (typeof item.startDate == 'string') {
@@ -135,6 +212,31 @@ controllers.controller('backlogController', function($scope, $mdDialog, $mdMedia
 
         // Options for the status of an item
         $scope.statusOptions = ['BACKLOG', 'IN_PROGRESS', 'TESTING', 'COMPLETE'];
+
+        /**
+         * Deletes the selected item from the db and the list
+         * @param ev
+         */
+        $scope.deleteItem = function (ev) {
+            $mdDialog.cancel();
+            var confirm = $mdDialog.confirm()
+                .title('Are you sure you want to delete this item?')
+                .textContent('')
+                .ariaLabel('Category Deletion')
+                .targetEvent(ev)
+                .ok('Yes')
+                .cancel('Cancel');
+
+            $mdDialog.show(confirm).then(function() {
+                var idx = categories[categoryIndex].items.indexOf(item);
+
+                Item.delete({id: item._id}, function() {
+                    if (idx > -1) {
+                        categories[categoryIndex].items.splice(idx, 1);
+                    }
+                });
+            })
+        };
 
         $scope.hide = function() {
             $mdDialog.hide();
@@ -153,5 +255,4 @@ controllers.controller('backlogController', function($scope, $mdDialog, $mdMedia
      * Perform initial query
      */
     $scope.updateCategories();
-
 });

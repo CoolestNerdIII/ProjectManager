@@ -6,7 +6,6 @@ var Sprint = require('./models/sprint');
 var categoryViewModel = require('./viewModels/category');
 var categoriesViewModel = require('./viewModels/categories');
 var sprintViewModel = require('./viewModels/sprint');
-// var reversePopulate = require('mongoose-reverse-populate');
 
 module.exports = function (app, passport) {
     "use strict";
@@ -127,13 +126,6 @@ module.exports = function (app, passport) {
         })
 
         .get(function(req, res) {
-            // Category.find(function(err, items) {
-            //     if (err) {
-            //         res.send(err);
-            //     }
-            //
-            //     res.json(items);
-            // })
             Category.find(function(err, categories) {
                 if (err) {
                     res.send(err);
@@ -147,14 +139,6 @@ module.exports = function (app, passport) {
                     res.json(categoriesViewModel(categories, items));
 
                 });
-                // Item.find(function(err, items) {
-                //     if (err) {
-                //         res.send(err);
-                //     }
-                //
-                //     res.json(categoriesViewModel(categories, items));
-                //
-                // })
             })
 
         });
@@ -207,11 +191,15 @@ module.exports = function (app, passport) {
             });
         })
 
-        // Perform a delete on a single category
+        // Perform a delete on a single category and all associated items
         .delete(function(req, res) {
-            Category.remove({
-                _id: req.params.category_id
-            }, function (err) {
+            Item.remove( {category: req.params.category_id}, function (err) {
+                if (err) {
+                    console.log('Error removing items with category: ' + err );
+                }
+            });
+
+            Category.remove({_id: req.params.category_id}, function (err) {
                 if (err) {
                     res.send(err);
                 }

@@ -8,7 +8,8 @@ angular.module('todo-aholic', [
         'todo-aholic.controllers',
         'ngMessages',
         'ngAnimate',
-        'ngMaterial'
+        'ngMaterial',
+        'ngMdIcons'
     ])
     .config(function ($httpProvider, $resourceProvider, $locationProvider, $urlMatcherFactoryProvider) {
         "use strict";
