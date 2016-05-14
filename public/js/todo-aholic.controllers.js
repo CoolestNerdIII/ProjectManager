@@ -22,13 +22,6 @@ controllers.controller('mainController', function($scope, $http, Todos) {
                 $scope.todos.push(data);
                 console.log(data);
             });
-            // Todos.create($scope.formData)
-            //
-            //     // if successful creation, call our get function to get all the new todos
-            //     .success(function(data) {
-            //         $scope.formData = {}; // clear the form so our user is ready to enter another
-            //         $scope.todos = data; // assign our new list of todos
-            //     });
         }
     };
 
@@ -37,11 +30,7 @@ controllers.controller('mainController', function($scope, $http, Todos) {
         Todos.update({id: item._id}, item, function(resp) {
             console.log(resp);
         });
-        // var item = Todos.get({id: id}, function() {
-        //     console.log(item);
-        //     item.done = !item.done;
-        //     item.$save()
-        // });
+
     };
 
     // delete a todo after checking it
@@ -272,4 +261,178 @@ controllers.controller('backlogController', function($scope, $mdDialog, $mdMedia
      * Perform initial query
      */
     $scope.updateCategories();
+});
+
+controllers.controller('sprintListCtrl', function ($scope, $mdDialog, Sprint) {
+    $scope.sprints = {};
+
+    $scope.getSprints = function() {
+        "use strict";
+        $scope.promise = Sprint.query().$promise;
+
+        $scope.promise.then(function(data) {
+            for(var i = 0; i < data.length; i++) {
+                var spr = data[i];
+
+                if(typeof spr.startDate == 'string') {
+                    spr.startDate = new Date(spr.startDate);
+                }
+
+                if(typeof spr.endDate == 'string') {
+                    spr.endDate = new Date(spr.endDate);
+                }
+
+                data[i] = spr;
+            }
+            
+            $scope.sprints = data;
+        }, function (response) {
+            console.log('Unable to get sprints');
+            console.log(response);
+        });
+    };
+
+    $scope.completionText = function(isComplete) {
+        "use strict";
+        if (isComplete) return 'Yes';
+        else return 'No';
+    };
+
+    $scope.deleteSprint = function(event, sprintId, idx) {
+        "use strict";
+        var confirm = $mdDialog.confirm()
+            .title('Are you sure you want to delete this sprint?')
+            .textContent('')
+            .ariaLabel('Sprint Deletion')
+            .targetEvent(event)
+            .ok('Yes')
+            .cancel('Cancel');
+
+        $mdDialog.show(confirm).then(function() {
+            Sprint.delete({id: sprintId}, function() {
+                if (idx > -1) {
+                    $scope.sprints.splice(idx, 1);
+                }
+            });
+        })
+
+    };
+
+    /**
+     * Save the updated status of the sprint
+     * @param sprint
+     */
+    $scope.saveSprint = function(sprint) {
+        "use strict";
+        Sprint.update({id:sprint._id}, sprint);
+    };
+
+    // $scope.editCompletion = function(event, sprint) {
+    //     "use strict";
+    //     $mdEditDialog.small({
+    //         modelValue: sprint.isComplete,
+    //         placeholder: 'Completion of item',
+    //         save: function(input)
+    //     })
+    // };
+
+    $scope.statusOptions = ['true', 'false'];
+
+    $scope.getSprints();
+});
+
+controllers.controller('sprintViewCtrl', function ($scope, $stateParams, Sprint, Item) {
+
+    $scope.lists = [
+        {
+            label: "BACKLOG",
+            allowedTypes: ["BACKLOG", "IN_PROGRESS", "TESTING", "COMPLETE"],
+            items: []
+        },
+        {
+            label: "IN_PROGRESS",
+            allowedTypes: ["BACKLOG", "IN_PROGRESS", "TESTING", "COMPLETE"],
+            items: []
+        },
+        {
+            label: "TESTING",
+            allowedTypes: ["BACKLOG", "IN_PROGRESS", "TESTING", "COMPLETE"],
+            items: []
+        },
+        {
+            label: "COMPLETE",
+            allowedTypes: ["BACKLOG", "IN_PROGRESS", "TESTING", "COMPLETE"],
+            items: []
+        }
+    ];
+
+    $scope.updateSprint = function() {
+        "use strict";
+
+        Sprint.get({id:$stateParams.sprintId}, function (data) {
+
+            for(var i = 0; i < data.items.length; i++) {
+                var item = data.items[i];
+
+                if(item.status == null) {
+                    item.status = 'BACKLOG';
+                    Item.update({id: item._id}, item);
+                }
+
+                if (item.status == "BACKLOG") {
+                    $scope.lists[0].items.push(item);
+                } else if (item.status == "IN_PROGRESS") {
+                    $scope.lists[1].items.push(item);
+                } else if (item.status == "TESTING") {
+                    $scope.lists[2].items.push(item);
+                }  else if (item.status == "COMPLETE") {
+                    $scope.lists[3].items.push(item);
+                }
+            }
+        })
+    };
+
+
+    $scope.dropCallback = function(event, index, item, external, type, allowedType) {
+
+        if (type !== allowedType) {
+            item.status = allowedType;
+            Item.update({id: item._id}, item, function(data) {
+                "use strict";
+                console.log(data);
+            });
+        }
+        return item;
+    };
+
+    $scope.loadAll = function() {
+        "use strict";
+        Item.query(function(data) {
+
+            for(var i = 0; i < data.length; i++) {
+                var item = data[i];
+                if (item.status == 'BACKLOG' || item.status == null) {
+                    if (!containsObject(item, $scope.lists[0].items)) {
+                        $scope.lists[0].items.push(item);
+                    }
+
+                }
+            }
+        })
+    };
+
+    function containsObject(obj, list) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+            if (list[i]._id === obj._id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    if ($stateParams.sprintId) {
+        $scope.updateSprint();
+    }
 });

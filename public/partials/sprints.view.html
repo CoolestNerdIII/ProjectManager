@@ -1,0 +1,23 @@
+<md-content layout="column" flex="">
+    <md-card>
+    <md-toolbar class="md-table-toolbar">
+        <div class="md-toolbar-tools">
+            This is a test
+        </div>
+    </md-toolbar>
+    </md-card>
+</md-content>
+
+<md-content layout-padding="" layout="column" layout-gt-sm="row">
+
+    <md-card flex="" flex-md="30" ng-repeat="list in lists">
+        <md-toolbar class="md-table-toolbar alternate">
+            <div class="md-toolbar-tools md-default">
+                <h3>{{list.label}}</h3>
+            </div>
+        </md-toolbar>
+        <md-content ng-include="'partials/sprints.view.detail.html'"></md-content>
+
+    </md-card>
+
+</md-content>

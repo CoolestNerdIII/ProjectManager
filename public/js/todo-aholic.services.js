@@ -17,5 +17,7 @@ angular.module('todo-aholic.services', ['ngResource'])
     })
     .factory('Sprint', function ($resource) {
         "use strict";
-        return $resource('/api/sprints/:id/');
+        return $resource('/api/sprints/:id/', {}, {
+            'update': {method: 'PUT'}
+        });
     });

@@ -287,6 +287,11 @@ module.exports = function (app, passport) {
 
         // Perform a delete on a single item
         .delete(function(req, res) {
+            //TODO: Confirm this works
+            Item.update({sprint: req.params.sprint_id}, {sprint: null}, function(err) {
+                console.log("Error removing the sprint from items: " + err);
+            });
+
             Sprint.remove({
                 _id: req.params.sprint_id
             }, function (err) {

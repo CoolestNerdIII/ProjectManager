@@ -7,7 +7,8 @@ var sprintSchema = mongoose.Schema({
     name: {type: String, index: true },
     dateCreated: {type: Date, default: Date.now},
     startDate: {type: Date, default: null, index: true },
-    endDate: {type: Date, default: null, index: true }
+    endDate: {type: Date, default: null, index: true },
+    isComplete: {type: Boolean, default: false}
 });
 
 // methods

@@ -1,0 +1,49 @@
+<md-content layout="column">
+    <md-card>
+    <md-toolbar class="md-table-toolbar alternate">
+        <div class="md-toolbar-tools">
+            <span>Sprints</span>
+        </div>
+        <!--<md-divider></md-divider>-->
+    </md-toolbar>
+
+    <md-table-container>
+        <table md-table md-progress="promise">
+            <thead md-head>
+            <tr md-row>
+                <th md-column><span>Name</span></th>
+                <th md-column><span>Start Date</span></th>
+                <th md-column><span>End Date</span></th>
+                <th md-column><span>Completion Status</span></th>
+                <th md-column><span>Delete</span></th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr md-row ng-repeat="sprint in sprints">
+                <td md-cell><a ui-sref="sprints.view({sprintId: sprint._id})">{{ sprint.name }}</a></td>
+                <!--<td md-cell>{{ sprint.startDate || 'N/A' }}</td>-->
+                <td md-cell>
+                    <md-datepicker ng-model="sprint.startDate" md-placeholder="Start Date" ng-change="saveSprint(sprint)"></md-datepicker>
+                </td>
+                <td md-cell>
+                    <md-datepicker ng-model="sprint.endDate" md-placeholder="End Date" ng-change="saveSprint(sprint)"></md-datepicker>
+                </td>
+                <td md-cell>
+                    <md-select ng-model="sprint.isComplete" placeholder="Set Completion" md-on-close="saveSprint(sprint)">
+                        <md-option ng-value="status" ng-repeat="status in statusOptions">{{ status }}</md-option>
+                    </md-select>
+                </td>
+                <td md-cell>
+                    <md-button class="md-icon-button" ng-click="deleteSprint($event, sprint._id, $index)" aria-label="delete">
+                        <ng-md-icon icon="delete"></ng-md-icon>
+                    </md-button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </md-table-container>
+
+    <!-- TODO: Add Pagination-->
+
+    </md-card>
+</md-content>

@@ -18,6 +18,8 @@
 
     <link rel="stylesheet" href="lib/angular-material/angular-material.min.css"/>
     <link rel="stylesheet" href="lib/angular-material-icons/angular-material-icons.css"/>
+    <link rel="stylesheet" href="lib/angular-material-data-table/dist/md-data-table.min.css"/>
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css"/>
 
 </head>
 
@@ -29,7 +31,8 @@
         <span flex=""></span>
 
         <md-button><a ui-sref="home"><span>Todo</span></a></md-button>
-        <md-button><a ui-sref="backlog"><span>Backlog</span></a> </md-button>
+        <md-button><a ui-sref="backlog"><span>Backlog</span></a></md-button>
+        <md-button><a ui-sref="sprints.list"><span>Sprints</span></a></md-button>
     </div>
 </md-toolbar>
 <div ui-view></div>
@@ -45,6 +48,9 @@
 <script src="lib/angular-messages/angular-messages.min.js"></script>
 <script src="lib/angular-material/angular-material.min.js"></script>
 <script src="lib/angular-material-icons/angular-material-icons.min.js"></script>
+<script src="lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js"></script>
+<script src="lib/angular-material-data-table/dist/md-data-table.min.js"></script>
+<script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
 
 <script src="js/todo-aholic.controllers.js"></script>
 <script src="js/todo-aholic.services.js"></script>

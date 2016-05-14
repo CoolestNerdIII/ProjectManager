@@ -9,7 +9,9 @@ angular.module('todo-aholic', [
         'ngMessages',
         'ngAnimate',
         'ngMaterial',
-        'ngMdIcons'
+        'ngMdIcons',
+        'dndLists',
+        'md.data.table'
     ])
     .config(function ($httpProvider, $resourceProvider, $locationProvider, $urlMatcherFactoryProvider) {
         "use strict";
@@ -38,6 +40,22 @@ angular.module('todo-aholic', [
                 url: '/backlog',
                 templateUrl: 'partials/backlog.html',
                 controller: 'backlogController'
+            })
+            .state('sprints', {
+                abstract: true,
+                url: '/sprints',
+                template: '<ui-view/>'
+            })
+            .state('sprints.list', {
+                url: '/list',
+                templateUrl: 'partials/sprints.list.html',
+                controller: 'sprintListCtrl'
+            })
+            .state('sprints.view', {
+                url: '/view',
+                templateUrl: 'partials/sprints.view.html',
+                controller: 'sprintViewCtrl',
+                params: {sprintId: null}
             })
     })
 

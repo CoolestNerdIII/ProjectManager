@@ -6,19 +6,30 @@ function getCategoriesViewModel(categories, items) {
     var groupedCategories = _
         .chain(items)
         .groupBy(function(item) {
-            return item.category._id;
+            if(item.category) return item.category._id;
+            else return null;
         })
         .map(function(value, key) {
 
             var cat = value[0].category;
-            return {
-                created: cat.created,
-                name: cat.name,
-                _id: cat._id,
-                category: key,
-                // items: _.omit(value, 'category')
-                items: value
+            if(cat) {
+                return {
+                    created: cat.created,
+                    name: cat.name,
+                    _id: cat._id,
+                    category: key,
+                    // items: _.omit(value, 'category')
+                    items: value
+                }
+            } else {
+                return {
+                    _id: null,
+                    category: key,
+                    // items: _.omit(value, 'category')
+                    items: value
+                }
             }
+
         })
         .value();
 
@@ -26,7 +37,9 @@ function getCategoriesViewModel(categories, items) {
 
         var cat = categories[i];
         var obj = groupedCategories.filter(function(obj) {
-            return obj._id.toString() == cat._id.toString();
+            if (obj._id) {
+                return obj._id.toString() == cat._id.toString();
+            }
         });
 
         if (!obj || Object.keys(obj).length == 0) {

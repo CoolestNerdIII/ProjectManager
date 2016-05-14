@@ -1,0 +1,59 @@
+<md-list dnd-list="list.items"
+         dnd-allowed-types="list.allowedTypes"
+         dnd-drop="dropCallback(event, index, item, external, type, list.label)">
+
+    <md-list-item ng-repeat="item in list.items"
+                  dnd-draggable="item"
+                  dnd-type="item.status"
+                  dnd-moved="list.items.splice($index, 1)"
+                  dnd-effect-allowed="move"
+                  dnd-disable-if="!item.status"
+                  class="md-2-line">
+
+        <!-- Reorder Icon -->
+        <md-icon aria-label="drag" class="md-avatar-icon">
+            <ng-md-icon icon="drag_handle"></ng-md-icon>
+        </md-icon>
+
+        <!-- List Item Title-->
+        <div class="md-list-item-text" layout="column">
+            <p>{{ item.title }}</p>
+        </div>
+
+        <md-divider></md-divider>
+    </md-list-item>
+
+    <!-- TODO: Add option to create new todo item -->
+    <form id="newItem" autocomplete="off" ng-submit="newItem(category._id)">
+        <md-list-item>
+            <!-- Input Text-->
+
+            <md-input-container class="md-block" flex="">
+                <label for="inputText">Enter New Todo Item</label>
+                <input id="inputText" name="newItem" ng-model="itemText" required>
+            </md-input-container>
+
+        </md-list-item>
+    </form>
+
+    <div ng-if="$index==0">
+        <md-divider></md-divider>
+    </div>
+
+    <div ng-if="$index == 0" layout="row" layout-align="center center">
+
+        <md-list-item>
+            <md-button class="md-raised md-primary" ng-click="loadAll()">
+                <span>Load Entire Backlog</span>
+            </md-button>
+        </md-list-item>
+    </div>
+
+    <md-list-item class="dndPlaceholder">
+        <div class="md-list-item-text" layout="row">
+            <p>Drop any item here.</p>
+        </div>
+
+    </md-list-item>
+
+</md-list>

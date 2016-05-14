@@ -9,6 +9,7 @@ function getSprintViewModel(sprint, items) {
         dateCreated: sprint.dateCreated,
         startDate: sprint.startDate,
         endDate: sprint.endDate,
+        isComplete: sprint.isComplete,
         items: items.map(function (item) {
             return {
                 title: item.title,
@@ -20,6 +21,7 @@ function getSprintViewModel(sprint, items) {
                 completionTime: item.completionTime,
                 category: item.category,
                 sprint: item.sprint,
+                _id: item._id,
                 url: '/items/' + item._id
             }
         })
