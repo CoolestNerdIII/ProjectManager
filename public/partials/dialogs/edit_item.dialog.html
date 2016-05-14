@@ -1,0 +1,50 @@
+<md-dialog aria-label="Edit Item" ng-cloak="" flex-auto="">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Edit Todo Item</h2>
+                <span flex=""></span>
+            </div>
+        </md-toolbar>
+
+        <md-content layout-padding="" layout="column">
+
+            <md-input-container class="md-block" flex-auto="">
+                <label for="title">Title</label>
+                <input ng-model="item.title" id="title">
+            </md-input-container>
+
+            <md-input-container class="md-block" flex-auto="">
+                <label for="description">Description</label>
+                <input ng-model="item.itemDescription" id="description">
+            </md-input-container>
+
+
+            <md-input-container class="md-block" flex-auto="">
+                <md-select ng-model="item.status" placeholder="Status" aria-label="Status">
+                    <md-option ng-value="opt" ng-repeat="opt in statusOptions">{{ opt }}</md-option>
+                </md-select>
+            </md-input-container>
+
+            <div layout="row" flex-auto="">
+                <md-datepicker ng-model="item.startDate" md-placeholder="Start Date"></md-datepicker>
+
+                <md-datepicker ng-model="item.endDate" md-placeholder="End Date"></md-datepicker>
+            </div>
+
+            <md-divider></md-divider>
+
+        </md-content>
+
+        <md-dialog-actions layout="row">
+            <div class="md-dialog-actions">
+                <span flex="">
+
+                    <md-button ng-click="cancel()">Dismiss</md-button>
+                    <md-button ng-click="submit()">Save</md-button>
+
+                </span>
+            </div>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

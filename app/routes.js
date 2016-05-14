@@ -4,7 +4,9 @@ var Category = require('./models/category');
 var Item = require('./models/item');
 var Sprint = require('./models/sprint');
 var categoryViewModel = require('./viewModels/category');
+var categoriesViewModel = require('./viewModels/categories');
 var sprintViewModel = require('./viewModels/sprint');
+// var reversePopulate = require('mongoose-reverse-populate');
 
 module.exports = function (app, passport) {
     "use strict";
@@ -125,13 +127,36 @@ module.exports = function (app, passport) {
         })
 
         .get(function(req, res) {
-            Category.find(function(err, items) {
+            // Category.find(function(err, items) {
+            //     if (err) {
+            //         res.send(err);
+            //     }
+            //
+            //     res.json(items);
+            // })
+            Category.find(function(err, categories) {
                 if (err) {
                     res.send(err);
                 }
 
-                res.json(items);
+                Item.find({}).populate('category').exec(function(err, items) {
+                    if (err) {
+                        res.send(err);
+                    }
+
+                    res.json(categoriesViewModel(categories, items));
+
+                });
+                // Item.find(function(err, items) {
+                //     if (err) {
+                //         res.send(err);
+                //     }
+                //
+                //     res.json(categoriesViewModel(categories, items));
+                //
+                // })
             })
+
         });
 
     router.route('/categories/:category_id')

@@ -7,7 +7,7 @@ var itemSchema = mongoose.Schema({
     startDate: {type: Date, default: null, index: true},
     endDate: {type: Date, default: null, index: true},
     creationDate: {type: Date, default: Date.now, index: true},
-    status: String,
+    status: {type: String, default: 'BACKLOG'}, // BACKLOG, IN_PROGRESS, TESTING, COMPLETE
     completionTime: Number,
     category: {type: mongoose.Schema.ObjectId, ref: 'Category'},
     sprint: {type: mongoose.Schema.ObjectId, ref: 'Sprint'}

@@ -1,0 +1,34 @@
+<md-content class="md-padding" layout="column">
+    <md-card ng-repeat="category in categories">
+        <md-toolbar>
+            <div class="md-toolbar-tools"> {{ category.name }} </div>
+
+        </md-toolbar>
+        <md-content>
+            <md-list ng-cloak="">
+                <md-list-item ng-repeat="item in category.items" class="md-2-line">
+                    <!-- Checkbox -->
+                    <md-checkbox ng-checked="item.status == 'COMPLETE' " ng-click="toggle(item)"></md-checkbox>
+
+                    <!-- Text labels-->
+                    <div class="md-list-item-text" layout="column">
+                    <h3> {{ item.title }} </h3>
+                    <p> {{ item.itemDescription }} </p>
+                    </div>
+
+                    <!-- Edit Button-->
+                    <md-button class="md-secondary" ng-click="editItemDialog($even, item)">Edit</md-button>
+                </md-list-item>
+
+                <md-list-item>
+                    <!-- Input Text-->
+                    <md-input-container class="md-block" flex="">
+                        <label for="inputText">Enter New Todo Item</label>
+                        <input>
+                    </md-input-container>
+                </md-list-item>
+            </md-list>
+        </md-content>
+    </md-card>
+
+</md-content>
