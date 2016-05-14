@@ -58,6 +58,7 @@ controllers.controller('backlogController', function($scope, $mdDialog, $mdMedia
     $scope.categories = [];
     $scope.categoryDisplay = [];
     $scope.itemText = '';
+    $scope.categoryText = '';
 
     /**
      * Function to update the categories returned
@@ -108,6 +109,22 @@ controllers.controller('backlogController', function($scope, $mdDialog, $mdMedia
         this.itemText = '';
 
         $scope.newItemText = '';
+    };
+
+    /**
+     * Function to create a new category
+     */
+    $scope.newCategory = function() {
+        var category = new Category({name: this.categoryText});
+        category.$save(function(resp) {
+            $scope.categories.unshift(resp);
+            $scope.categoryDisplay.unshift(true);
+        });
+
+
+
+        this.categoryText = '';
+        $scope.categoryText = '';
     };
 
     /**

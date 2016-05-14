@@ -1,5 +1,15 @@
 <md-content class="md-padding" layout="column">
+    <md-card class="md-padding">
+            <form id="newCategory" autocomplete="off" ng-submit="newCategory()">
+                <md-input-container class="md-block" flex="">
+                    <label for="newCategoryText">Create a New List</label>
+                    <input id="newCategoryText" name="newCategory" ng-model="categoryText" required>
+                </md-input-container>
+            </form>
+    </md-card>
+
     <md-card ng-repeat="category in categories">
+
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2>{{ category.name }}</h2>
@@ -26,38 +36,39 @@
 
         </md-toolbar>
         <div ng-if="categoryDisplay[$index]">
-        <md-content>
-            <md-list ng-cloak="">
+            <md-content>
+                <md-list ng-cloak="">
 
-                <form id="newItem" autocomplete="off" ng-submit="newItem(category._id)">
-                <md-list-item>
-                    <!-- Input Text-->
+                    <form id="newItem" autocomplete="off" ng-submit="newItem(category._id)">
+                        <md-list-item>
+                            <!-- Input Text-->
 
-                    <md-input-container class="md-block" flex="">
-                        <label for="inputText">Enter New Todo Item</label>
-                        <input id="inputText" name="newItem" ng-model="itemText" required>
-                    </md-input-container>
+                            <md-input-container class="md-block" flex="">
+                                <label for="inputText">Enter New Todo Item</label>
+                                <input id="inputText" name="newItem" ng-model="itemText" required>
+                            </md-input-container>
 
-                </md-list-item>
-                </form>
+                        </md-list-item>
+                    </form>
 
-                <md-list-item ng-repeat="item in category.items" class="md-2-line">
-                    <!-- Checkbox -->
-                    <md-checkbox ng-checked="item.status == 'COMPLETE' " ng-click="toggle(item)"></md-checkbox>
+                    <md-list-item ng-repeat="item in category.items" class="md-2-line">
+                        <!-- Checkbox -->
+                        <md-checkbox ng-checked="item.status == 'COMPLETE' " ng-click="toggle(item)"></md-checkbox>
 
-                    <!-- Text labels-->
-                    <div class="md-list-item-text" layout="column">
-                    <h3> {{ item.title }} </h3>
-                    <p> {{ item.itemDescription }} </p>
-                    </div>
+                        <!-- Text labels-->
+                        <div class="md-list-item-text" layout="column">
+                            <h3> {{ item.title }} </h3>
+                            <p> {{ item.itemDescription }} </p>
+                        </div>
 
-                    <!-- Edit Button-->
-                    <md-button class="md-secondary" ng-click="editItemDialog($event, item, $parent.$index)">Edit</md-button>
-                </md-list-item>
+                        <!-- Edit Button-->
+                        <md-button class="md-secondary" ng-click="editItemDialog($event, item, $parent.$index)">Edit
+                        </md-button>
+                    </md-list-item>
 
 
-            </md-list>
-        </md-content>
+                </md-list>
+            </md-content>
         </div>
     </md-card>
 
