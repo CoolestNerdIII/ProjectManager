@@ -1,8 +1,13 @@
 // load all the things we need
 var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 
 // load up the user model
 var User = require('../app/models/user');
+
+// load the auth variables
+var configAuth = require('./auth');
 
 // expose this function to our app using module.exports
 module.exports = function (passport) {
@@ -112,5 +117,131 @@ module.exports = function (passport) {
             });
 
         }));
+
+    // =========================================================================
+    // FACEBOOK =============================================================
+    // =========================================================================
+    passport.use(new FacebookStrategy({
+
+        // pull in our app id and secret from our auth.js file
+        clientID: configAuth.facebookAuth.clientID,
+        clientSecret: configAuth.facebookAuth.clientSecret,
+        callbackURL: configAuth.facebookAuth.callbackURL
+    },
+
+    // facebook will send back the token and profile
+    function (req, token, refreshToken, profile, done) {
+        // asynchronous
+        process.nextTick(function () {
+
+            // check if the user is already logged in
+            if (!req.user) {
+
+                // find the user in the database based on their facebook id
+                User.findOne({'facebook.id': profile.id}, function (err, user) {
+                    // if there is an error, stop everything and return that
+                    // ie an error connecting to the dtabase
+                    if (err) return done(err);
+
+                    // if the user is found, then log them in
+                    if (user) {
+                        return done(null, user); // user found, return that user
+                    } else {
+                        // if there is no user found with that facebook id, create them
+                        var newUser = new User();
+
+                        // set all of the facebook information in our user model
+                        newUser.facebook.id = profile.id; // set the users facebook id
+                        newUser.facebook.token = token; // we will save the token that facebook provides to the user
+                        newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
+                        newUser.facebook.email = profile.emails[0].value;
+                        newUser.first_name = profile.name.givenName;
+                        newUser.last_name = profile.name.familyName;
+
+                        // save our user to the database
+                        newUser.save(function (err) {
+                            if (err) throw err;
+
+                            // if successful, return the new user
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } else {
+                // user already exists and is logged in, we have to link accounts
+                var user = req.user; // pull the user out of the session
+
+                // update the current users facebook credentials
+                user.facebook.id = profile.id;
+                user.facebook.token = token;
+                user.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
+                user.facebook.email = profile.emails[0].value;
+
+                // save the user
+                user.save(function(err) {
+                    if (err) throw err;
+                    return done(null, user);
+                });
+            }
+        });
+    }));
+
+    // =========================================================================
+    // TWITTER =================================================================
+    // =========================================================================
+    passport.use(new TwitterStrategy({
+        consumerKey: configAuth.twitterAuth.consumerKey,
+        consumerSecret: configAuth.twitterAuth.consumerSecret,
+        callbackURL: configAuth.twitterAuth.callbackURL
+    },
+    function (req, token, tokenSecret, profile, done) {
+        // make the code asynchronous
+        process.nextTick(function () {
+            if (!req.user) {
+                User.findOne({'twitter.id': profile.id}, function (err, user) {
+
+                    // if there is an error, stop everything and return that
+                    if (err) return done(err);
+
+                    // if the user is found then log in
+                    if (user) {
+                        return done(null, user); // user found, return that user
+                    } else {
+                        // if there is no user, create them
+                        var newUser = new User();
+
+                        // set all of the user data that we need
+                        newUser.twitter.id = profile.id;
+                        newUser.twitter.token = token;
+                        newUser.twitter.username = profile.username;
+                        newUser.twitter.displayName = profile.displayName;
+
+                        // save our user into the datbase
+                        newUser.save(function (err) {
+                            if (err) throw err;
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } else {
+                // user already exists and is logged in, we have to link accounts
+                var user = req.user; // pull the user out of the session
+
+                // update the current users twitters credentials
+                user.twitter.id = profile.id;
+                user.twitter.token = token;
+                user.twitter.username = profile.username;
+                user.twitter.displayName = profile.displayName;
+
+                // save the user
+                user.save(function(err) {
+                    if (err) throw err;
+                    return done(null, user);
+                });
+            }
+
+        });
+
+    }));
 
 };

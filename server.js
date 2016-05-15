@@ -4,6 +4,8 @@ var mongoose = require('mongoose'); // mongoose for mongodb
 var passport = require('passport');
 var flash = require('connect-flash');
 var port     = process.env.PORT || 8080;                // set the port
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 
 var morgan = require('morgan');  // log requests to the console
 var bodyParser = require('body-parser'); // pull information from HTML POST
@@ -36,7 +38,25 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // routes ==========
 require('./app/routes')(app, passport); // load our routes and pass in our fully configured passport
 
+// socketio =============
+io.on('connection', function(socket) {
+    "use strict";
+    console.log('a user connected');
 
+    socket.on('join', function(data) {
+        console.log(data);
+        socket.emit('messages', 'Hello from server');
+    });
+
+    socket.on('chat message', function(msg) {
+        socket.emit('chat message', msg);
+    });
+
+    socket.on('disconnect', function() {
+        console.log('a user disconnected');
+    })
+});
 // launch ==========
-app.listen(port);
+// app.listen(port);
+server.listen(port);
 console.log("App listening on port 8080");

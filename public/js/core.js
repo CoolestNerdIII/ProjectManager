@@ -1,5 +1,3 @@
-// js/core.js
-
 angular.module('todo-aholic', [
         'ngRoute',
         'ui.router',
@@ -11,7 +9,8 @@ angular.module('todo-aholic', [
         'ngMaterial',
         'ngMdIcons',
         'dndLists',
-        'md.data.table'
+        'md.data.table',
+        'btford.socket-io'
     ])
     .config(function ($httpProvider, $resourceProvider, $locationProvider, $urlMatcherFactoryProvider) {
         "use strict";
@@ -31,6 +30,11 @@ angular.module('todo-aholic', [
         "use strict";
         $urlRouterProvider.otherwise('/');
         $stateProvider
+            .state('login', {
+                url: '/login',
+                templateUrl: 'partials/login.html',
+                controller: 'LoginCtrl'
+            })
             .state('home', {
                 url: '/',
                 templateUrl: 'partials/home.html',
@@ -56,6 +60,11 @@ angular.module('todo-aholic', [
                 templateUrl: 'partials/sprints.view.html',
                 controller: 'sprintViewCtrl',
                 params: {sprintId: null}
+            })
+            .state('chat', {
+                url: '/chat',
+                templateUrl: 'partials/chat.html',
+                controller: 'chatCtrl'
             })
     })
 

@@ -13,10 +13,6 @@ module.exports = {
         'callbackURL'       : 'http://localhost:8080/auth/twitter/callback'
     },
 
-    'googleAuth' : {
-        'clientID'      : 'your-secret-clientID-here',
-        'clientSecret'  : 'your-client-secret-here',
-        'callbackURL'   : 'http://localhost:8080/auth/google/callback'
-    }
+    randomSecret: 'MY_SECRET' //TODO: Change secret
 
 };

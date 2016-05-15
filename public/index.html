@@ -37,7 +37,15 @@
 </md-toolbar>
 <div ui-view></div>
 
+<script src="/socket.io/socket.io.js"></script>
 <script src="lib/jquery/dist/jquery.min.js"></script>
+<!--<script>-->
+    <!--var socket = io.connect();-->
+    <!--socket.on('connect', function(data) {-->
+        <!--console.log('Connected');-->
+        <!--socket.emit('join', 'hello world from client');-->
+    <!--});-->
+<!--</script>-->
 <script src="lib/angular/angular.js"></script>
 <script src="lib/angular-resource/angular-resource.min.js"></script>
 <script src="lib/angular-route/angular-route.min.js"></script>
@@ -51,6 +59,7 @@
 <script src="lib/angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js"></script>
 <script src="lib/angular-material-data-table/dist/md-data-table.min.js"></script>
 <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="lib/angular-socket-io/socket.min.js"></script>
 
 <script src="js/todo-aholic.controllers.js"></script>
 <script src="js/todo-aholic.services.js"></script>

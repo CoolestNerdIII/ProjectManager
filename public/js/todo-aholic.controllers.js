@@ -1,8 +1,22 @@
 var controllers = angular.module('todo-aholic.controllers', []);
 
-controllers.controller('mainController', function($scope, $http, Todos) {
+controllers.controller('LoginCtrl', function($scope) {
+    "use strict";
+    $scope.user = {};
+
+    $scope.login = function() {
+        console.log('login');
+    };
+});
+
+controllers.controller('mainController', function($scope, $http, Todos, mySocket) {
     "use strict";
     $scope.formData = {};
+
+    mySocket.on('connect', function(data) {
+        console.log('Connected');
+        mySocket.emit('join', 'hello world from client')
+    });
 
     Todos.query(function(data) {
         $scope.todos = data;
@@ -284,7 +298,7 @@ controllers.controller('sprintListCtrl', function ($scope, $mdDialog, Sprint) {
 
                 data[i] = spr;
             }
-            
+
             $scope.sprints = data;
         }, function (response) {
             console.log('Unable to get sprints');
@@ -435,4 +449,23 @@ controllers.controller('sprintViewCtrl', function ($scope, $stateParams, Sprint,
     if ($stateParams.sprintId) {
         $scope.updateSprint();
     }
+});
+
+controllers.controller('chatCtrl', function ($scope, mySocket) {
+    "use strict";
+    $scope.message = '';
+    $scope.messages = [];
+
+    mySocket.on('chat message', function(msg) {
+        console.log(msg);
+        $scope.messages.push(msg);
+    });
+
+    $scope.sendMessage = function() {
+        mySocket.emit('chat message', this.message);
+        
+        this.message = '';
+        $scope.message = '';
+        
+    };
 });

@@ -6,6 +6,13 @@ var Sprint = require('./models/sprint');
 var categoryViewModel = require('./viewModels/category');
 var categoriesViewModel = require('./viewModels/categories');
 var sprintViewModel = require('./viewModels/sprint');
+var User = require('./models/user');
+var jwt = require('express-jwt');
+
+var auth = jwt({
+    secret: require('../config/auth').randomSecret,
+    userProperty: 'payload'
+});
 
 module.exports = function (app, passport) {
     "use strict";
@@ -20,6 +27,57 @@ module.exports = function (app, passport) {
     });
 
     // API ROUTES =============================================
+    
+    // AUTHENTICATION ====================================
+    router.route('/register')
+        // Handle new users registering
+        .post(function(req, res) {
+            var user = new User();
+
+            user.first_name = req.body.first_name;
+            user.last_name = req.body.last_name;
+            user.local.email = req.body.email;
+            user.local.password = user.generateHash(req.body.password);
+
+            user.save(function(err) {
+                var token;
+                token = user.generateJwt();
+                res.status(200);
+                res.json({
+                    "token": token
+                });
+            });
+
+        });
+    
+    router.route('/login')
+        // handle returning users logging
+        .post(function(req, res) {
+            passport.authenticate('local-login', function(err, user, info) {
+                var token;
+
+                if (err) {
+                    res.status(404).json(err);
+                    return;
+                }
+
+                // If a user is found
+                if (user) {
+                    token = user.generateJwt();
+                    res.status(200);
+                    res.json({token: token});
+                } else {
+                    res.status(401).json(info);
+                }
+            })(req, res);
+            
+        });
+    
+    router.route('/profile/:user_id')
+        // return profile details when given a userid
+        .get(function(req, res) {
+            
+        });
 
     // ITEMS =============================================
     router.route('/items')
@@ -387,80 +445,80 @@ module.exports = function (app, passport) {
 
     app.use('/api', router);
 
-    // ===================================
-    // HOME PAGE (with login links) ======
-    // ===================================
-    app.get('/', function(req, res) {
-        res.render('index.ejs'); // load the index.ejs file
-    });
-
-    // ===================================
-    // LOGIN =============================
-    // ===================================
-    // Show the login form
-    app.get('/login', function(req, res) {
-        // render the page and pass in any flash data if it exists
-        res.render('login.ejs', { message: req.flash('loginMessage') });
-    });
-
-    // process the login form
-    app.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/profile', // redirect to the secure profile section
-        failureRedirect : '/login', // redirect back to the signup page if there is an error
-        failureFlash : true // allow flash messages
-    }));
-
-    // ===================================
-    // SIGNUP ============================
-    // ===================================
-    // Show the signup form
-    app.get('/signup', function(req, res) {
-        // render the page and pass in any flash data if it exists
-        res.render('signup.ejs', { message: req.flash('signupMessage') });
-    });
-
-    // process the signup form
-    app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect: '/profile', // redirect to the secure profile section
-        failureRedirect: '/signup', // redirect back to the signup page if there is an error
-        failureFlash: true // allow flash messages
-    }));
-
-    // ===================================
-    // PROFILE ===========================
-    // ===================================
-    // We want this page protected so that you have to be logged in to visit
-    app.get('/profile', isLoggedIn,  function(req, res) {
-        res.render('profile.ejs', {
-            user: req.user // get the user out of session and pass to template
-        });
-    });
-
-    // ===================================
-    // LOGOUT ============================
-    // ===================================
-    app.get('/logout', function(req, res) {
-        req.logout();
-        res.redirect('/');
-    });
-
+    // // ===================================
+    // // HOME PAGE (with login links) ======
+    // // ===================================
+    // app.get('/', function(req, res) {
+    //     res.render('index.ejs'); // load the index.ejs file
+    // });
+    //
+    // // ===================================
+    // // LOGIN =============================
+    // // ===================================
+    // // Show the login form
+    // app.get('/login', function(req, res) {
+    //     // render the page and pass in any flash data if it exists
+    //     res.render('login.ejs', { message: req.flash('loginMessage') });
+    // });
+    //
+    // // process the login form
+    // app.post('/login', passport.authenticate('local-login', {
+    //     successRedirect : '/profile', // redirect to the secure profile section
+    //     failureRedirect : '/login', // redirect back to the signup page if there is an error
+    //     failureFlash : true // allow flash messages
+    // }));
+    //
+    // // ===================================
+    // // SIGNUP ============================
+    // // ===================================
+    // // Show the signup form
+    // app.get('/signup', function(req, res) {
+    //     // render the page and pass in any flash data if it exists
+    //     res.render('signup.ejs', { message: req.flash('signupMessage') });
+    // });
+    //
+    // // process the signup form
+    // app.post('/signup', passport.authenticate('local-signup', {
+    //     successRedirect: '/profile', // redirect to the secure profile section
+    //     failureRedirect: '/signup', // redirect back to the signup page if there is an error
+    //     failureFlash: true // allow flash messages
+    // }));
+    //
+    // // ===================================
+    // // PROFILE ===========================
+    // // ===================================
+    // // We want this page protected so that you have to be logged in to visit
+    // app.get('/profile', isLoggedIn,  function(req, res) {
+    //     res.render('profile.ejs', {
+    //         user: req.user // get the user out of session and pass to template
+    //     });
+    // });
+    //
+    // // ===================================
+    // // LOGOUT ============================
+    // // ===================================
+    // app.get('/logout', function(req, res) {
+    //     req.logout();
+    //     res.redirect('/');
+    // });
+    //
     // ===================================
     // CATCH ALL =========================
     // ===================================
     app.get('*', function (req, res) {
-        res.sendfile('./public/index.html'); // load the single view file
+        res.sendFile('index.html', {root: 'public'}); // load the single view file
     });
-
-    
-    // route middleware to make sure a user is logged in
-    function isLoggedIn(req, res, next) {
-
-        // if user is authenticated in the session, carry on
-        if (req.isAuthenticated())
-            return next();
-
-        // if they aren't redirect them to the home page
-        res.redirect('/');
-    }
+    //
+    //
+    // // route middleware to make sure a user is logged in
+    // function isLoggedIn(req, res, next) {
+    //
+    //     // if user is authenticated in the session, carry on
+    //     if (req.isAuthenticated())
+    //         return next();
+    //
+    //     // if they aren't redirect them to the home page
+    //     res.redirect('/');
+    // }
 
 };

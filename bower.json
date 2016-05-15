@@ -25,6 +25,7 @@
     "angular-material-icons": "^0.7.0",
     "angular-drag-and-drop-lists": "^1.4.0",
     "angular-material-data-table": "^0.10.9",
-    "bootstrap": "^3.3.6"
+    "bootstrap": "^3.3.6",
+    "angular-socket-io": "^0.7.0"
   }
 }

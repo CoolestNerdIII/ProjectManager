@@ -1,4 +1,8 @@
 angular.module('todo-aholic.services', ['ngResource'])
+    .factory('mySocket', function(socketFactory) {
+        "use strict";
+        return socketFactory();
+    })
     .factory('Todos', function ($resource) {
         "use strict";
         return $resource('/api/todos/:id/', {}, {
@@ -20,4 +24,8 @@ angular.module('todo-aholic.services', ['ngResource'])
         return $resource('/api/sprints/:id/', {}, {
             'update': {method: 'PUT'}
         });
+    })
+    .factory('Room', function ($resource) {
+        "use strict";
+        return $resource('/api/rooms/:id/');
     });
