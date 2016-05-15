@@ -1,17 +1,14 @@
 <!doctype html>
 
 <!-- ASSIGN OUR ANGULAR MODULE -->
-<html ng-app="todo-aholic" ng-cloak="">
+<html ng-app="project_manager" ng-cloak="">
 <head>
     <!-- META -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
 
-    <title>Node/Angular Todo App</title>
+    <title>Project Manager</title>
     <base href="/">
-
-    <!-- SCROLLS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
     <link rel="stylesheet" href="css/styles.css">
     <!-- load bootstrap -->
@@ -27,7 +24,7 @@
 <body>
 <md-toolbar class="md-whiteframe-1dp">
     <div class="md-toolbar-tools">
-        <div class="md-title"><a ui-sref="home"><span>Todo-Aholic</span></a> </div>
+        <div class="md-title"><a ui-sref="home"><span>Project Manager</span></a> </div>
         <span flex=""></span>
 
         <md-button><a ui-sref="home"><span>Todo</span></a></md-button>
@@ -39,13 +36,6 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="lib/jquery/dist/jquery.min.js"></script>
-<!--<script>-->
-    <!--var socket = io.connect();-->
-    <!--socket.on('connect', function(data) {-->
-        <!--console.log('Connected');-->
-        <!--socket.emit('join', 'hello world from client');-->
-    <!--});-->
-<!--</script>-->
 <script src="lib/angular/angular.js"></script>
 <script src="lib/angular-resource/angular-resource.min.js"></script>
 <script src="lib/angular-route/angular-route.min.js"></script>

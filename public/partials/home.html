@@ -12,8 +12,8 @@
             <!-- LOOP OVER THE TODOS IN $scope.todos -->
             <div class="checkbox" ng-repeat="todo in todos">
                 <label>
-                    <input type="checkbox" ng-click="markComplete(todo)" ng-checked="todo.done"> {{ todo.text }}
-                    <!--<input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}-->
+                    <!--<input type="checkbox" ng-click="markComplete(todo)" ng-checked="todo.done"> {{ todo.text }}-->
+                    <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}
                 </label>
             </div>
 

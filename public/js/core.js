@@ -1,4 +1,4 @@
-angular.module('todo-aholic', [
+angular.module('project_manager', [
         'ngRoute',
         'ui.router',
         'ngResource',
