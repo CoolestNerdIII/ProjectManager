@@ -1,6 +1,6 @@
 {
-  "name": "todo-aholic",
-  "description": "",
+  "name": "project_manager",
+  "description": "This is a simple application that can be used to manage projects using agile development practices",
   "main": "server.js",
   "authors": [
     "Paul Wilson <paul.l.wilson3@gmail.com>"

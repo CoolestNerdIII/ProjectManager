@@ -1,4 +1,4 @@
-var controllers = angular.module('todo-aholic.controllers', []);
+var controllers = angular.module('project_manager.controllers', []);
 
 controllers.controller('LoginCtrl', function($scope) {
     "use strict";

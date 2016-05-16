@@ -1,3 +1,3 @@
 module.exports = {
-    url: 'mongodb://localhost/todo-aholic'
+    url: 'mongodb://localhost/project_manager'
 };

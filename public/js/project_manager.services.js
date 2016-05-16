@@ -1,4 +1,4 @@
-angular.module('todo-aholic.services', ['ngResource'])
+angular.module('project_manager.services', ['ngResource'])
     .factory('mySocket', function(socketFactory) {
         "use strict";
         return socketFactory();
